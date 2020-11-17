@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">WordList</string>
     <string name="japanese">日本語</string>
+    <string name="add_strings">追加</string>
+    <string name="input_title">タイトルを入力してください</string>
+    <string name="ok">OK</string>
+    <string name="cancel">CANCEL</string>
+    <string name="already_exists">This name is already used.</string>
 </resources>
