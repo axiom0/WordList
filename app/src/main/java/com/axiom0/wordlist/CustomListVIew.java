@@ -5,15 +5,15 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-public class NonScrollListVIew extends ListView {
+public class CustomListVIew extends ListView {
 
-    public NonScrollListVIew(Context context) {
+    public CustomListVIew(Context context) {
         super(context);
     }
-    public NonScrollListVIew(Context context, AttributeSet attrs) {
+    public CustomListVIew(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-    public NonScrollListVIew(Context context, AttributeSet attrs, int defStyle) {
+    public CustomListVIew(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
     @Override

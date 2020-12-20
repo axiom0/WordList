@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rootLayout"
+    tools:context=".ViewActivity"
+    android:orientation="vertical">
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="61dp"
+        android:src="@drawable/actionbar" />
+
+
+
+        <ImageView
+            android:id="@+id/btnEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="61dp"
+            android:src="@drawable/btn_edit"
+            android:layout_gravity="right"
+            android:visibility="visible"
+            />
+        <ImageView
+            android:id="@+id/btnCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="61dp"
+            android:src="@drawable/btn_check"
+            android:layout_gravity="right"
+            android:visibility="invisible"
+            />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#05f">
+
+        <ScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ff0">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="#f08"
+                >
+
+                <com.axiom0.wordlist.CustomListVIew
+                    android:id="@+id/lv_left"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                </com.axiom0.wordlist.CustomListVIew>
+
+
+                <com.axiom0.wordlist.CustomListVIew
+                    android:id="@+id/lv_right"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                </com.axiom0.wordlist.CustomListVIew>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/inputLL"
+            android:gravity="bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/input_left"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:inputType="text"
+                android:hint="ENGLISH"/>
+            <EditText
+                android:id="@+id/input_right"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:inputType="text"
+                android:hint="@string/japanese"/>
+
+            <Button
+                android:id="@+id/btnAdd"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:text="@string/add_strings" />
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+
+
+
+
+</LinearLayout>
