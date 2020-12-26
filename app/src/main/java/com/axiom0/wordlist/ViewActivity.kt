@@ -44,7 +44,7 @@ class ViewActivity : Activity() {
             val editText = EditText(this)
             editText.inputType = InputType.TYPE_CLASS_TEXT
             editText.setText(itemTextView.text)
-            val dialog = AlertDialog.Builder(this).setTitle(R.string.input_title).setMessage("")
+            val dialog = AlertDialog.Builder(this).setTitle(R.string.input_word).setMessage("")
                 .setView(editText)
             dialog.setPositiveButton(R.string.ok) { _, _ ->
                 val t :String = editText.text.toString()
@@ -61,7 +61,7 @@ class ViewActivity : Activity() {
             val editText = EditText(this)
             editText.inputType = InputType.TYPE_CLASS_TEXT
             editText.setText(itemTextView.text)
-            val dialog = AlertDialog.Builder(this).setTitle(R.string.input_title).setMessage("")
+            val dialog = AlertDialog.Builder(this).setTitle(R.string.input_word).setMessage("")
                 .setView(editText)
             dialog.setPositiveButton(R.string.ok) { _, _ ->
                 val t :String = editText.text.toString()
