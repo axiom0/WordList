@@ -32,7 +32,6 @@ class StartActivity :AppCompatActivity() {
 
 
         initList()
-//        setClickEvents
 
 
 
@@ -69,20 +68,32 @@ class StartActivity :AppCompatActivity() {
             val s = itemTextView.text.toString()
 
             Log.i("TAG", s)
+            if(s==""){
+                AlertDialog.Builder(this).setMessage(R.string.alert_void).show()
+            }else{
+                openViewer(s, false)
+            }
 
-            openViewer(s, false)
+
+
         }
 
         title_list.setOnItemLongClickListener { _, view, _, _ ->
             val itemTextView : TextView = view.findViewById(android.R.id.text1)
             val s = itemTextView.text.toString()
 
-            val dialog = AlertDialog.Builder(this).setTitle(R.string.check_export).setMessage(Environment.DIRECTORY_DCIM)
-            dialog.setPositiveButton(R.string.ok) { _, _ ->
-                exportCSV(s)
+            if(s==""){
+                AlertDialog.Builder(this).setMessage(R.string.alert_void).show()
+            }else{
+                val dialog = AlertDialog.Builder(this).setTitle(R.string.check_export).setMessage(Environment.DIRECTORY_DCIM)
+                dialog.setPositiveButton(R.string.ok) { _, _ ->
+                    exportCSV(s)
+                }
+                    .setNegativeButton(R.string.cancel, null)
+                    .show()
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+
+
 
             return@setOnItemLongClickListener true
         }
@@ -97,7 +108,14 @@ class StartActivity :AppCompatActivity() {
 
     private fun initList(){
         tList = getTitleList()
-        title_list.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tList)
+        if(tList[0]=="" && tList.size==1){
+
+        }else if (tList[0]=="" && tList.size>=2){
+            (tList as ArrayList<String>).removeAt(0)
+            title_list.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tList)
+        }else{
+            title_list.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tList)
+        }
     }
 
     private fun openViewer(filename: String, isNew: Boolean){
@@ -113,10 +131,6 @@ class StartActivity :AppCompatActivity() {
         val preferences : SharedPreferences = this.getSharedPreferences(title, Context.MODE_PRIVATE)
         var titleString:String = preferences.getString(title, "")?: ""
 
-        if(titleString==""){
-            titleString = "Example"
-
-        }
         return ArrayList(titleString.split(","))
     }
 

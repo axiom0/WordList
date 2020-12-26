@@ -9,4 +9,5 @@
     <string name="cant_use_comma">You cannot use comma for title.</string>
     <string name="cant_use_void">You must input some words for title.</string>
     <string name="check_export">Are you really want to export your file?</string>
+    <string name="alert_void">Make your own title files.</string>
 </resources>
