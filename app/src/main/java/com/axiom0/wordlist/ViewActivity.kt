@@ -80,6 +80,8 @@ class ViewActivity : Activity() {
                 addTextToList()
                 setListToView()
             }
+            input_left.text.clear()
+            input_right.text.clear()
         }
 
 
@@ -110,6 +112,7 @@ class ViewActivity : Activity() {
 
             lv_left.isClickable = true
             lv_right.isClickable = true
+            saveCSV()
         }
 
     }
