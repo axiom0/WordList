@@ -1,25 +1,28 @@
 package com.axiom0.wordlist
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
 import android.text.InputType
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.activity_view.*
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
 import kotlin.collections.ArrayList
+import kotlinx.coroutines.*
+import okhttp3.internal.wait
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
-class ViewActivity : Activity() {
+class ViewActivity() : Activity(){
 
     private var wList : ArrayList<ArrayList<String>> = arrayListOf(arrayListOf<String>(), arrayListOf<String>())
+    private val LEFT = 0
+    private val RIGHT = 1
 
     private var isEditable = false
     private var title = ""
@@ -115,6 +118,77 @@ class ViewActivity : Activity() {
             saveCSV()
         }
 
+
+
+
+
+
+        btnEdit.setOnLongClickListener {
+            val linearLayout = LinearLayout(this)
+            linearLayout.orientation = LinearLayout.HORIZONTAL
+
+
+            val sideSpinner = Spinner(this)
+            ArrayAdapter.createFromResource(this, R.array.translate_source_side, android.R.layout.simple_spinner_item
+            ).also { adapter ->
+                // Specify the layout to use when the list of choices appears
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                // Apply the adapter to the spinner
+                sideSpinner.adapter = adapter
+            }
+
+            val sourceSpinner =  Spinner(this)
+            ArrayAdapter.createFromResource(this, R.array.translate_language, android.R.layout.simple_spinner_item
+            ).also { adapter ->
+                // Specify the layout to use when the list of choices appears
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                // Apply the adapter to the spinner
+                sourceSpinner.adapter = adapter
+            }
+
+
+            val targetSpinner =  Spinner(this)
+            ArrayAdapter.createFromResource(this, R.array.translate_language, android.R.layout.simple_spinner_item
+            ).also { adapter ->
+                // Specify the layout to use when the list of choices appears
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                // Apply the adapter to the spinner
+                targetSpinner.adapter = adapter
+            }
+
+            linearLayout.addView(sideSpinner)
+            linearLayout.addView(sourceSpinner)
+            linearLayout.addView(targetSpinner)
+
+            val dialog = AlertDialog.Builder(this).setTitle(R.string.input_word).setMessage("")
+                .setView(linearLayout)
+            dialog.setPositiveButton(R.string.ok) { _, _ ->
+                val sourceSide = translateSideConvert(sideSpinner.selectedItem.toString())
+                val sourceLanguage = translateLanguageConvert(sourceSpinner.selectedItem.toString())
+                val targetLanguage = translateLanguageConvert(targetSpinner.selectedItem.toString())
+
+                Log.d("TAG",sourceLanguage)
+                Log.d("TAG",targetLanguage)
+
+                runBlocking {
+                    translate(sourceSide, sourceLanguage, targetLanguage)
+
+                }
+                setListToView()
+                saveCSV()
+
+                Log.d("TAG", "RESULT!!!!!!!!!!!!!!")
+                for(i in wList[1]){
+                    Log.d("TAG",i)
+                }
+                Log.d("TAG", "RESULT!!!!!!!!!!!!!!")
+            }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+
+            return@setOnLongClickListener true
+        }
+
     }
 
     override fun onPause() {
@@ -136,8 +210,55 @@ class ViewActivity : Activity() {
         lv_right.adapter = adapterR
     }
 
-    private fun setClickEvent(){
 
+    //sourceLanguage and targetLanguage is autoTranslateHelper.ENGLISH or autoTranslateHelper.JAPANESE
+    private suspend fun translate(sourceSide: Int, sourceLanguage: String, targetLanguage: String){
+        var autoTranslateHelper = AutoTranslateHelper()
+
+        val targetSide = changeSide(sourceSide)
+        for(i in 0 until wList[targetSide].size){
+            Log.d("TAG",i.toString())
+                if (wList[targetSide][i]==""){
+                    Log.d("TAG","i void")
+                    wList[targetSide][i]= request(autoTranslateHelper, sourceSide, sourceLanguage, targetLanguage, i).await()
+                    Log.d("TAG",wList[targetSide][i])
+                }
+        }
+    }
+
+
+
+
+    private suspend fun request(autoTranslateHelper: AutoTranslateHelper, sourceSide: Int,
+                                sourceLanguage: String, targetLanguage: String, i : Int): Deferred<String> {
+        val targetSide = changeSide(sourceSide)
+        return GlobalScope.async {
+            return@async autoTranslateHelper.callback(wList[sourceSide][i], sourceLanguage, targetLanguage)
+        }
+    }
+
+    private fun changeSide(side: Int): Int{
+        return if(side== LEFT) RIGHT else LEFT
+    }
+
+    private fun translateSideConvert(sourceSideString: String): Int{
+        return if(sourceSideString=="Left") LEFT else RIGHT
+    }
+
+    private fun translateLanguageConvert(languageString: String): String{
+        var language = AutoTranslateHelper.ENGLISH
+        when(languageString){
+            "English" -> {
+                language = AutoTranslateHelper.ENGLISH
+            }
+            "Japanese" -> {
+                language = AutoTranslateHelper.JAPANESE
+            }
+            "Chinese" ->{
+                language = AutoTranslateHelper.CHINESE
+            }
+        }
+        return  language
     }
 
 

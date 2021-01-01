@@ -11,4 +11,22 @@
     <string name="check_export">Are you really want to export your file?</string>
     <string name="alert_void">Make your own title files.</string>
     <string name="input_word">Input word.</string>
+
+
+
+
+
+
+
+
+
+    <string-array name="translate_source_side">
+        <item>Left</item>
+        <item>Right</item>
+    </string-array>
+    <string-array name="translate_language">
+        <item>English</item>
+        <item>Japanese</item>
+        <item>Chinese</item>
+    </string-array>
 </resources>
