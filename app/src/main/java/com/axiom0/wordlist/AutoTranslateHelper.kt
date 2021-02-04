@@ -19,7 +19,11 @@ class AutoTranslateHelper {
     }
 
 
+
     fun request(text: String, source: String, target: String): String{
+        if(source == target){
+            return ""
+        }
 
         var r = "?text=$text&source=$source&target=$target"
         val url = urlBase + r
@@ -31,6 +35,11 @@ class AutoTranslateHelper {
     }
 
     fun callback (text: String, source: String, target: String): String{
+        if(source == target){
+            return ""
+        }
+
+
         var r = "?text=$text&source=$source&target=$target"
         val url = urlBase + r
 

@@ -12,6 +12,9 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_start.*
 import java.io.File
 import java.io.FileInputStream
@@ -23,9 +26,17 @@ import kotlin.collections.ArrayList
 class StartActivity :AppCompatActivity() {
     private val title = "title"
     var tList: List<String> = ArrayList<String>(listOf(""))
+
+    lateinit var mAdView : AdView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
+        MobileAds.initialize(this) {}
+
+        mAdView = findViewById(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
         //---------only for development----------
 //        clearPrefs()
         //---------------------------------------
@@ -124,6 +135,7 @@ class StartActivity :AppCompatActivity() {
         intent.putExtra("filename", filename)
         intent.putExtra("isNew", isNew)
         startActivity(intent)
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
 

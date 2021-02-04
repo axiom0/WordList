@@ -7,6 +7,9 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_view.*
 import java.io.BufferedWriter
 import java.io.File
@@ -29,17 +32,28 @@ class ViewActivity() : Activity(){
     private var path = ""
     private var isNew = true
 
+    lateinit var mAdView : AdView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view)
+        MobileAds.initialize(this) {}
+
+        mAdView = findViewById(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
 
         title = intent.getStringExtra("filename") as String
         isNew = intent.getBooleanExtra("isNew", true)
         path = "$filesDir/$title.csv"
         Log.d("PATH", path)
 
+        action_bar_title.text = title
         readCSV()
         setListToView()
+
+        var lvLeftClickable = false
+        var lvRightClickable = false
 
         lv_left.setOnItemClickListener { _, view, position, _ ->
             val itemTextView : TextView = view.findViewById(android.R.id.text1)
@@ -55,8 +69,7 @@ class ViewActivity() : Activity(){
                 setListToView()
             }
                 .setNegativeButton(R.string.cancel, null)
-                .show()
-
+            if(lvLeftClickable)  dialog.show()
         }
         lv_right.setOnItemClickListener { _, view, position, _ ->
             val itemTextView : TextView = view.findViewById(android.R.id.text1)
@@ -72,11 +85,10 @@ class ViewActivity() : Activity(){
                 setListToView()
             }
                 .setNegativeButton(R.string.cancel, null)
-                .show()
+            if(lvRightClickable)  dialog.show()
         }
 
-        lv_left.isClickable = true
-        lv_right.isClickable = true
+
 
         btnAdd.setOnClickListener {
             if(isEditable){
@@ -100,8 +112,8 @@ class ViewActivity() : Activity(){
             btnCheck.visibility = View.VISIBLE
             inputLL.scaleY = inputLLYScale
 
-            lv_left.isClickable = false
-            lv_right.isClickable = false
+            lvLeftClickable = true
+            lvRightClickable = true
         }
 
         btnCheck.setOnClickListener {
@@ -113,8 +125,8 @@ class ViewActivity() : Activity(){
             btnCheck.visibility = View.INVISIBLE
             inputLL.scaleY = 0f
 
-            lv_left.isClickable = true
-            lv_right.isClickable = true
+            lvLeftClickable =false
+            lvRightClickable = false
             saveCSV()
         }
 
